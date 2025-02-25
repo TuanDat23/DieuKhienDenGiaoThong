@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống giao thông thông minh</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .traffic-light {
+            width: 100px;
+            background: black;
+            padding: 15px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin: 20px auto;
+            position: relative;
+        }
+        .light {
+            width: 60px;
+            height: 60px;
+            background: gray;
+            border-radius: 50%;
+            position: relative;
+        }
+        .active.green { background: green; }
+        .active.yellow { background: yellow; }
+        .active.red { background: red; }
+        img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+    <script>
+        let analyzing = false;
+
+        function updateTrafficLight() {
+            fetch('/traffic_state')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("red").classList.toggle("active", data.light === "red");
+                    document.getElementById("yellow").classList.toggle("active", data.light === "yellow");
+                    document.getElementById("green").classList.toggle("active", data.light === "green");
+                    
+                    document.getElementById("displayedImage").src = "static/latest_image.jpg?" + new Date().getTime();
+                    
+                    if (data.light === "yellow" && !analyzing) {
+                        analyzing = true;
+                        fetch('/analyze_image', { method: 'POST' })
+                            .then(response => response.json())
+                            .then(result => {
+                                console.log("Phân tích hoàn tất", result);
+                                analyzing = false;
+                            });
+                    }
+                });
+        }
+        setInterval(updateTrafficLight, 1000);
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Hệ thống điều khiển giao thông thông minh</h1>
+        
+        <h2>Hình ảnh nhận diện</h2>
+        <img id="displayedImage" src="static/latest_image.jpg" alt="Ảnh nhận diện">
+        
+        <h2>Đèn giao thông</h2>
+        <div class="traffic-light">
+            <div id="red" class="light"></div>
+            <div id="yellow" class="light"></div>
+            <div id="green" class="light"></div>
+        </div>
+    </div>
+</body>
+</html>

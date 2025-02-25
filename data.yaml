@@ -1,0 +1,14 @@
+path: D:/HT/thigiacmay/BaiTap/DemSoLuongXe/dataset
+train: D:/HT/thigiacmay/BaiTap/DemSoLuongXe/dataset/train/images
+val: D:/HT/thigiacmay/BaiTap/DemSoLuongXe/dataset/valid/images
+test: D:/HT/thigiacmay/BaiTap/DemSoLuongXe/dataset/test/images
+
+nc: 4
+names: ['Bus', 'O To', 'Xe May', 'Xe Tai']
+
+roboflow:
+  workspace: car-xxdip
+  project: vehicle-detection-07i2t
+  version: 7
+  license: Public Domain
+  url: https://universe.roboflow.com/car-xxdip/vehicle-detection-07i2t/dataset/7
